@@ -15,7 +15,8 @@ var builder = require('botbuilder'),
 var express = require('express');
 var app = express();
 
-
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 // Maximum number of hero cards to be returned in the carousel. If this number is greater than 10, skype throws an exception.
 var MAX_CARD_COUNT = 10;
