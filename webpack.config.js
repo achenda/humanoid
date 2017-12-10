@@ -1,8 +1,9 @@
-var path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
-var basePath = __dirname;
+const basePath = __dirname;
 
 module.exports = {
   context: path.join(basePath, 'src'),
@@ -28,11 +29,18 @@ module.exports = {
     ],
   },
   output: {
-    path: path.join(basePath, 'dist'),
+    //filename: '[name].bundle.js',
+    path: path.resolve(basePath, 'dist'),
+    // path: path.join(basePath, 'dist'),
     filename: '[name].js',
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        use: [{ loader: 'babel-loader', options: { cacheDirectory: true } }],
+        exclude: /node_modules(?!\/webpack-dev-server)/,
+      },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
@@ -68,15 +76,11 @@ module.exports = {
       },
     ],
   },
-  // For development https://webpack.js.org/configuration/devtool/#for-development
-  devtool: 'inline-source-map',
-  devServer: {
-    port: 8080,
-    noInfo: true,
-  },
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     //Generate index.html in /dist => https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
+      title: 'Production',
       filename: 'index.html', //Name of file in ./dist/
       template: 'index.html', //Name of template in ./src
       hash: true,
