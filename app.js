@@ -12,6 +12,11 @@ var builder = require('botbuilder'),
     validUrl = require('valid-url'),
     imageService = require('./image-service');
 
+var express = require('express');
+var app = express();
+
+
+
 // Maximum number of hero cards to be returned in the carousel. If this number is greater than 10, skype throws an exception.
 var MAX_CARD_COUNT = 10;
 
@@ -21,9 +26,9 @@ var MAX_CARD_COUNT = 10;
 
 // Setup Restify Server
 var server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 8080, function () {
-    console.log('%s listening to %s', server.name, server.url);
-});
+// server.listen(process.env.port || process.env.PORT || 8080, function () {
+//     console.log('%s listening to %s', server.name, server.url);
+// });
 
 // Create chat bot
 var connector = new builder.ChatConnector({
@@ -31,10 +36,24 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
-server.post('/api/messages', connector.listen());
-server.get('/api/param/:name', function(req, res, next) {
+//
+// server.get('/api/param/:name', function(req, res, next) {
+//     res.send('hello ' + req.params.name);
+//     next();
+// });
+
+app.post('/api/messages', connector.listen());
+app.get('/api/param/:name', function(req, res, next) {
     res.send('hello ' + req.params.name);
     next();
+});
+app.use(express.static(__dirname + '/dist'));
+app.get('/', function(req, res) {
+    res.render('index');
+});
+
+app.listen(process.env.PORT || 8080, function() {
+    console.log('Achenda AI is running');
 });
 
 // Gets the similar images by checking the type of the image (stream vs URL) and calling the appropriate image service method.
