@@ -4,7 +4,7 @@
   "description": "Sample working with React,TypeScript and Webpack",
   "scripts": {
     "watch": "webpack-dev-server --open --config webpack.dev.js",
-    "start": "npm run build && node server.js",
+    "start": "node app.js",
     "build": "webpack --config webpack.prod.js"
   },
   "author": "Lemoncode",
@@ -20,7 +20,13 @@
     "react-router": "^3.0.5",
     "redux": "^3.7.0",
     "redux-thunk": "^2.2.0",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "botbuilder": "^3.8.2",
+    "dotenv-extended": "^1.0.4",
+    "request": "^2.79.0",
+    "restify": "^4.3.0",
+    "url": "^0.11.0",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "@types/react": "^15.0.27",
