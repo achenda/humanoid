@@ -4,13 +4,14 @@
   "description": "Sample working with React,TypeScript and Webpack",
   "scripts": {
     "watch": "webpack-dev-server --open --config webpack.dev.js",
-    "start": "webpack-dev-server --open --config webpack.prod.js",
+    "start": "npm run build && node server.js",
     "build": "webpack --config webpack.prod.js"
   },
   "author": "Lemoncode",
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "express": "^4.16.2",
     "jquery": "^3.2.1",
     "lc-form-validation": "^1.0.0",
     "react": "^15.5.4",
@@ -38,7 +39,7 @@
     "typescript": "^2.3.4",
     "url-loader": "^0.5.9",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.7.1",
+    "webpack-dev-server": "^2.9.7",
     "webpack-merge": "^4.1.1"
   }
 }
