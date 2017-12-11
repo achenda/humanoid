@@ -1,22 +1,20 @@
-/*-----------------------------------------------------------------------------
-A Similar Products bot for the Microsoft Bot Framework. 
------------------------------------------------------------------------------*/
+var express = require('express');
+var app = express();
 
 // This loads the environment variables from the .env file
 require('dotenv-extended').load();
 
 var builder = require('botbuilder'),
-    restify = require('restify'),
+//    restify = require('restify'),
     request = require('request').defaults({ encoding: null }),
     url = require('url'),
     validUrl = require('valid-url'),
     imageService = require('./image-service');
 
-var express = require('express');
-var app = express();
+
 
 // app.engine('html', require('ejs').renderFile);
-app.set('view engine', 'html');
+//app.set('view engine', 'html');
 
 // Maximum number of hero cards to be returned in the carousel. If this number is greater than 10, skype throws an exception.
 var MAX_CARD_COUNT = 10;
@@ -24,37 +22,24 @@ var MAX_CARD_COUNT = 10;
 //=========================================================
 // Bot Setup
 //=========================================================
-
-// Setup Restify Server
-var server = restify.createServer();
-// server.listen(process.env.port || process.env.PORT || 8080, function () {
-//     console.log('%s listening to %s', server.name, server.url);
-// });
-
-// Create chat bot
 var connector = new builder.ChatConnector({
     appId: process.env.MICROSOFT_APP_ID,
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
-//
-// server.get('/api/param/:name', function(req, res, next) {
-//     res.send('hello ' + req.params.name);
-//     next();
-// });
-
-app.post('/api/messages', connector.listen());
-app.get('/api/param/:name', function(req, res, next) {
-    res.send('hello ' + req.params.name);
-    next();
-});
 app.use(express.static(__dirname + '/dist'));
 app.get('/', function(req, res) {
     res.render('index');
 });
 
-app.listen(process.env.PORT || 8080, function() {
+app.listen(process.env.port || process.env.PORT || 8080, function() {
     console.log('Achenda AI is running');
+});
+
+app.post('/api/messages', connector.listen());
+app.get('/api/param/:name', function(req, res, next) {
+    res.send('hello ' + req.params.name);
+    next();
 });
 
 // Gets the similar images by checking the type of the image (stream vs URL) and calling the appropriate image service method.
