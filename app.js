@@ -22,10 +22,10 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
-// app.use(express.static(__dirname + '/dist'));
-// app.get('/', function(req, res) {
-//     res.render('index');
-// });
+app.use(express.static(__dirname + '/dist'));
+app.get('/', function(req, res) {
+    res.render('index');
+});
 
 app.listen(process.env.port || process.env.PORT || 8080, function() {
     console.log('Achenda AI is running');
