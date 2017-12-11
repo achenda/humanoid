@@ -1,17 +1,74 @@
 import * as React from 'react';
 import { Link } from 'react-router';
+import { assign } from 'office-ui-fabric-react/lib/Utilities';
+import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
+import { items, overflowItems, farItems } from './menuitem';
 
-export const Header: React.StatelessComponent<{}> = () => {
-  return (
-    <div className="row">
-      <nav className="navbar navbar-default">
-        <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul className="nav navbar-nav">
-            <li><Link to="/about">About</Link></li>
-            <li><Link to="/members">Members</Link></li>
-          </ul>
-        </div>
-      </nav>
-    </div>
-  );
+export class Header extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      isSearchBoxVisible: true,
+      areNamesVisible: true,
+      areIconsVisible: true
+    };
+  }
+
+  public render() {
+    //let { items, overflowItems, farItems } = this.props;
+    let { isSearchBoxVisible: searchBoxVisible, areIconsVisible: iconsVisible, areNamesVisible: namesVisible } = this.state;
+
+    let filteredItems = items.map((item: any) => assign({}, item, {
+      iconOnly: !namesVisible,
+      icon: iconsVisible ? item.icon : ''
+    }));
+
+    let filteredOverflowItems = overflowItems.map((item: any) => assign({}, item, {
+      iconOnly: !namesVisible,
+      icon: iconsVisible ? item.icon : ''
+    }));
+
+    let filteredFarItems = farItems.map((item: any) => assign({}, item, {
+      iconOnly: !namesVisible,
+      icon: iconsVisible ? item.icon : ''
+    }));
+
+    return (
+      <div>
+        <CommandBar
+          isSearchBoxVisible={ searchBoxVisible }
+          searchPlaceholderText='Search...'
+          elipisisAriaLabel='More options'
+          items={ filteredItems }
+          overflowItems={ filteredOverflowItems }
+          farItems={ filteredFarItems }
+        />
+        <Toggle
+          label='Show search box'
+          checked={ searchBoxVisible }
+          // tslint:disable-next-line:jsx-no-lambda
+          onChanged={ isSearchBoxVisible => this.setState({ isSearchBoxVisible }) }
+          onText='Visible'
+          offText='Hidden'
+        />
+        <Toggle
+          label='Show names'
+          checked={ namesVisible }
+          // tslint:disable-next-line:jsx-no-lambda
+          onChanged={ areNamesVisible => this.setState({ areNamesVisible }) }
+          onText='Visible'
+          offText='Hidden'
+        />
+        <Toggle
+          label='Show icons'
+          checked={ iconsVisible }
+          // tslint:disable-next-line:jsx-no-lambda
+          onChanged={ areIconsVisible => this.setState({ areIconsVisible }) }
+          onText='Visible'
+          offText='Hidden'
+        />
+      </div>
+    );
+  }
 }

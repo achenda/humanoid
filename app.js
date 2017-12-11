@@ -22,10 +22,10 @@ var connector = new builder.ChatConnector({
     appPassword: process.env.MICROSOFT_APP_PASSWORD
 });
 
-app.use(express.static(__dirname + '/dist'));
-app.get('/', function(req, res) {
-    res.render('index');
-});
+// app.use(express.static(__dirname + '/dist'));
+// app.get('/', function(req, res) {
+//     res.render('index');
+// });
 
 app.listen(process.env.port || process.env.PORT || 8080, function() {
     console.log('Achenda AI is running');
@@ -37,16 +37,70 @@ app.get('/api/param/:name', function(req, res, next) {
 app.post('/api/messages', connector.listen());
 
 // Bot setup
+// var bot = new builder.UniversalBot(connector, function (session) {
+//     var cards = getCardsAttachments();
+
+//     // create reply with Carousel AttachmentLayout
+//     var reply = new builder.Message(session)
+//         .attachmentLayout(builder.AttachmentLayout.carousel)
+//         .attachments(cards);
+
+//     session.send(reply);
+// });
+
+var userStore = [];
 var bot = new builder.UniversalBot(connector, function (session) {
-    var cards = getCardsAttachments();
+    // store user's address
+    var address = session.message.address;
+    userStore.push(address);
 
-    // create reply with Carousel AttachmentLayout
-    var reply = new builder.Message(session)
-        .attachmentLayout(builder.AttachmentLayout.carousel)
-        .attachments(cards);
-
-    session.send(reply);
+    // end current dialog
+    session.endDialog('You\'ve been invited to a survey! It will start in a few seconds...');
 });
+
+// Every 5 seconds, check for new registered users and start a new dialog
+setInterval(function () {
+    var newAddresses = userStore.splice(0);
+    newAddresses.forEach(function (address) {
+
+        console.log('Starting survey for address:', address);
+
+        // new conversation address, copy without conversationId
+        var newConversationAddress = Object.assign({}, address);
+        delete newConversationAddress.conversation;
+
+        // start survey dialog
+        bot.beginDialog(newConversationAddress, 'survey', null, function (err) {
+            if (err) {
+                // error ocurred while starting new conversation. Channel not supported?
+                bot.send(new builder.Message()
+                    .text('This channel does not support this operation: ' + err.message)
+                    .address(address));
+            }
+        });
+
+    });
+}, 5000);
+
+bot.dialog('survey', [
+    function (session) {
+        builder.Prompts.text(session, 'Hello... What\'s your name?');
+    },
+    function (session, results) {
+        session.userData.name = results.response;
+        builder.Prompts.number(session, 'Hi ' + results.response + ', How many years have you been coding?');
+    },
+    function (session, results) {
+        session.userData.coding = results.response;
+        builder.Prompts.choice(session, 'What language do you code Node using? ', ['JavaScript', 'CoffeeScript', 'TypeScript']);
+    },
+    function (session, results) {
+        session.userData.language = results.response.entity;
+        session.endDialog('Got it... ' + session.userData.name +
+            ' you\'ve been programming for ' + session.userData.coding +
+            ' years and use ' + session.userData.language + '.');
+    }
+]);
 
 function getCardsAttachments(session) {
     return [

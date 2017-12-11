@@ -12,7 +12,10 @@ module.exports = {
   },
   entry: {
     app: './index.tsx',
-    appStyles: './css/site.css',
+    appStyles: [
+      './asset/site.css',
+      './asset/css/font-awesome.css'
+    ],
     vendor: [
       'react',
       'react-dom',
