@@ -44,7 +44,7 @@ export class Header extends React.Component<any, any> {
           overflowItems={ filteredOverflowItems }
           farItems={ filteredFarItems }
         />
-        <Toggle
+        {/* <Toggle
           label='Show search box'
           checked={ searchBoxVisible }
           // tslint:disable-next-line:jsx-no-lambda
@@ -67,7 +67,7 @@ export class Header extends React.Component<any, any> {
           onChanged={ areIconsVisible => this.setState({ areIconsVisible }) }
           onText='Visible'
           offText='Hidden'
-        />
+        /> */}
       </div>
     );
   }

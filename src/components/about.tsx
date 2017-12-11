@@ -3,7 +3,6 @@ import * as React from 'react';
 export const About: React.StatelessComponent<{}> = () => {
   return (
     <div className="row about-page">
-      <h1 className="jumbotron">09 Redux</h1>
 
       <div className="col-xs-12">
         <h1>

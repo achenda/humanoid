@@ -4,6 +4,7 @@
   "description": "Sample working with React,TypeScript and Webpack",
   "scripts": {
     "watch": "webpack-dev-server --open --config webpack.dev.js",
+    "serve": "node app.js",
     "start": "npm run build && node app.js",
     "build": "webpack --config webpack.prod.js"
   },
