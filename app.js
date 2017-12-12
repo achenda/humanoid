@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
 });
 
 app.listen(process.env.port || process.env.PORT || 8080, function() {
-    console.log('Achenda AI is running');
+    console.log('Humanoid is running');
 });
 app.get('/api/param/:name', function(req, res, next) {
     res.send('hello ' + req.params.name);
@@ -67,7 +67,7 @@ setInterval(function () {
 
         // new conversation address, copy without conversationId
         var newConversationAddress = Object.assign({}, address);
-        delete newConversationAddress.conversation;
+        // delete newConversationAddress.conversation;
 
         // start survey dialog
         bot.beginDialog(newConversationAddress, 'survey', null, function (err) {
